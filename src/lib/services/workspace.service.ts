@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import type { Workspace, Environment, EnvVariable, AnalyticsSummary, DayCount, RequestReliability } from "@/types";
+import type { Workspace, Environment, EnvVariable } from "@/types";
 
 export const workspaceService = {
   list: () => api.get<Workspace[]>("/workspaces"),
@@ -26,15 +26,4 @@ export const environmentService = {
   updateVariable: (id: string, data: Partial<EnvVariable>) =>
     api.patch<EnvVariable>(`/variables/${id}`, data),
   deleteVariable: (id: string) => api.delete(`/variables/${id}`),
-};
-
-export const analyticsService = {
-  summary: (workspaceId: string) =>
-    api.get<AnalyticsSummary>(`/workspaces/${workspaceId}/analytics/summary`),
-  trends: (workspaceId: string, days = 30) =>
-    api.get<DayCount[]>(`/workspaces/${workspaceId}/analytics/trends`, {
-      params: { days },
-    }),
-  reliability: (workspaceId: string) =>
-    api.get<RequestReliability[]>(`/workspaces/${workspaceId}/analytics/reliability`),
 };

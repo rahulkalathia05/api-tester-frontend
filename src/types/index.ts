@@ -192,30 +192,6 @@ export interface Schedule {
   next_run_at: string | null;
 }
 
-// ── Analytics ─────────────────────────────────────────────────────────────────
-
-export interface AnalyticsSummary {
-  total_runs: number;
-  pass_rate: number;           // 0–1
-  avg_response_time_ms: number;
-  total_requests_executed: number;
-}
-
-export interface DayCount {
-  date: string;
-  passed: number;
-  failed: number;
-}
-
-export interface RequestReliability {
-  request_id: string;
-  request_name: string;
-  total: number;
-  passed: number;
-  pass_rate: number;
-  avg_response_time_ms: number;
-}
-
 // ── Diff ──────────────────────────────────────────────────────────────────────
 
 export type ChangeType = "added" | "removed" | "changed" | "unchanged";
@@ -261,6 +237,57 @@ export interface ResultHistoryItem {
   response_status: number | null;
   response_time_ms: number | null;
   executed_at: string;
+}
+
+// ── Analytics ─────────────────────────────────────────────────────────────────
+
+export interface AnalyticsSummary {
+  days: number;
+  total_runs: number;
+  passed_runs: number;
+  failed_runs: number;
+  error_runs: number;
+  pass_rate: number;
+  total_executions: number;
+  passed_executions: number;
+  failed_executions: number;
+  avg_response_time_ms: number | null;
+  p95_response_time_ms: number | null;
+}
+
+export interface DayStat {
+  date: string;
+  total: number;
+  passed: number;
+  failed: number;
+  pass_rate: number;
+}
+
+export interface EndpointStat {
+  request_id: string | null;
+  name: string;
+  method: string;
+  url: string;
+  total_executions: number;
+  avg_response_time_ms: number;
+  max_response_time_ms: number;
+  pass_rate: number;
+}
+
+export interface CollectionStat {
+  collection_id: string;
+  collection_name: string;
+  total_runs: number;
+  passed_runs: number;
+  pass_rate: number;
+  avg_response_time_ms: number | null;
+}
+
+export interface WorkspaceAnalytics {
+  summary: AnalyticsSummary;
+  daily_trend: DayStat[];
+  slowest_endpoints: EndpointStat[];
+  collection_stats: CollectionStat[];
 }
 
 // ── Pagination ────────────────────────────────────────────────────────────────
