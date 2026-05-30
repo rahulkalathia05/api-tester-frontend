@@ -218,11 +218,49 @@ export interface RequestReliability {
 
 // ── Diff ──────────────────────────────────────────────────────────────────────
 
-export interface DiffResult {
-  request_id: string;
-  added: string[];
-  removed: string[];
-  changed: Array<{ path: string; from: string; to: string }>;
+export type ChangeType = "added" | "removed" | "changed" | "unchanged";
+
+export interface FieldChange {
+  path: string;
+  from_value: string | null;
+  to_value: string | null;
+  change_type: ChangeType;
+}
+
+export interface SectionDiff {
+  section: string;
+  label: string;
+  summary: string;
+  changes: FieldChange[];
+  has_changes: boolean;
+}
+
+export interface ResultSnapshot {
+  result_id: string;
+  executed_at: string;
+  run_status: string;
+  status_code: number | null;
+  response_time_ms: number | null;
+  request_name: string;
+  request_method: string;
+  request_url: string;
+}
+
+export interface ResultDiff {
+  a: ResultSnapshot;
+  b: ResultSnapshot;
+  sections: SectionDiff[];
+  total_changes: number;
+  is_identical: boolean;
+}
+
+export interface ResultHistoryItem {
+  id: string;
+  test_run_id: string;
+  status: string;
+  response_status: number | null;
+  response_time_ms: number | null;
+  executed_at: string;
 }
 
 // ── Pagination ────────────────────────────────────────────────────────────────

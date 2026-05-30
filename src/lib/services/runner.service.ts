@@ -1,6 +1,8 @@
 import api from "@/lib/api";
 import type {
   PaginatedResponse,
+  ResultDiff,
+  ResultHistoryItem,
   RunStats,
   TestResult,
   TestRun,
@@ -56,6 +58,18 @@ export const runnerService = {
 
   getResult: (resultId: string) =>
     api.get<TestResult>(`/results/${resultId}`),
+
+  // ── Diff ────────────────────────────────────────────────────────────────────
+  diffResults: (resultIdA: string, resultIdB: string) =>
+    api.post<ResultDiff>("/results/diff", {
+      result_id_a: resultIdA,
+      result_id_b: resultIdB,
+    }),
+
+  getRequestHistory: (requestId: string, limit = 10) =>
+    api.get<ResultHistoryItem[]>(`/requests/${requestId}/history`, {
+      params: { limit },
+    }),
 
   // SSE stream URL (used directly with EventSource, not via axios)
   streamUrl: (runId: string) =>
