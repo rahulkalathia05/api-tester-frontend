@@ -49,6 +49,13 @@ function getAuthToken(): string {
   } catch { return ""; }
 }
 
+/** Strip accidental "METHOD + " prefix if user typed "GET + https://..." */
+function cleanUrl(raw: string): string {
+  return raw
+    .replace(/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s*\+\s*/i, "")
+    .trim();
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function CollectionPage() {
@@ -157,12 +164,14 @@ export default function CollectionPage() {
 
   const handleSave = async () => {
     if (!selectedId) return;
+    const cleanedUrl = cleanUrl(form.url);
+    if (cleanedUrl !== form.url) setForm(f => ({ ...f, url: cleanedUrl }));
     setSavingForm(true);
     try {
       await collectionService.updateRequest(selectedId, {
         name: form.name,
         method: form.method as any,
-        url: form.url,
+        url: cleanedUrl,
         body: form.body || null,
         body_type: form.body ? "json" : "none",
       } as any);
@@ -226,6 +235,8 @@ export default function CollectionPage() {
 
   const handleRun = async () => {
     if (!selectedId) return;
+    // Clean URL before saving so "GET + https://..." doesn't reach the backend
+    setForm(f => ({ ...f, url: cleanUrl(f.url) }));
     await handleSave();
     setRunning(true);
     setRunResult(null);
