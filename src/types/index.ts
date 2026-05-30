@@ -106,7 +106,9 @@ export interface TestRun {
   id: string;
   workspace_id: string;
   collection_id: string | null;
+  collection_name: string | null;
   environment_id: string | null;
+  triggered_by: string | null;
   trigger_type: "manual" | "scheduled" | "api";
   status: RunStatus;
   total: number;
@@ -114,7 +116,24 @@ export interface TestRun {
   failed: number;
   started_at: string | null;
   completed_at: string | null;
+  duration_ms: number | null;
 }
+
+export interface TestRunDetail extends TestRun {
+  results: TestResult[];
+}
+
+export interface RunStats {
+  total_runs: number;
+  passed_runs: number;
+  failed_runs: number;
+  error_runs: number;
+  pass_rate: number;
+  avg_duration_ms: number | null;
+  avg_response_time_ms: number | null;
+}
+
+export type SortDir = "asc" | "desc";
 
 export interface TestResult {
   id: string;
@@ -213,6 +232,7 @@ export interface PaginatedResponse<T> {
   total: number;
   page: number;
   page_size: number;
+  pages: number;
 }
 
 // ── API errors ────────────────────────────────────────────────────────────────
