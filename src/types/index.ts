@@ -31,14 +31,25 @@ export interface Environment {
   name: string;
   is_active: boolean;
   created_at: string;
+  variable_count?: number;
+}
+
+export interface EnvironmentDetail extends Environment {
+  variables: EnvVariable[];
 }
 
 export interface EnvVariable {
   id: string;
   environment_id: string;
   key: string;
-  value: string;
+  value: string;       // "***" when is_secret=true
   is_secret: boolean;
+}
+
+export interface PreviewResponse {
+  result: string;
+  resolved_keys: string[];
+  unresolved_keys: string[];
 }
 
 // ── Collections & Requests ────────────────────────────────────────────────────
