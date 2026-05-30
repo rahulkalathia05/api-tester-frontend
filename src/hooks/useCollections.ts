@@ -13,7 +13,9 @@ export function useCollections(workspaceId: string | undefined) {
     setError(null);
     try {
       const { data } = await collectionService.list(workspaceId);
-      setCollections(data);
+      // API returns a paginated envelope {items, total, ...} — extract the array
+      const items = Array.isArray(data) ? data : (data as any).items ?? [];
+      setCollections(items);
     } catch {
       setError("Failed to load collections");
     } finally {
